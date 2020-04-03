@@ -11,7 +11,6 @@ class Player
 
   def score
     score = 0
-
     @cards.each do |card|
       next if card[0] == 'A'
       card_points = card.to_i
@@ -36,13 +35,13 @@ class Player
   end
 end
 
-class User < Player
+class UserPlayer < Player
   def initialize(userName)
     super(userName)
   end
 end
 
-class Dealer < Player
+class DealerPlayer < Player
   def initialize
     super('Dealer')
   end
