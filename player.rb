@@ -9,6 +9,23 @@ class Player
     @bank = 100
   end
 
+  def score
+    score = 0
+
+    @cards.each do |card|
+      next if card[0] == 'A'
+      card_points = card.to_i
+      card_points = 10 if card_points == 0
+      score += card_points
+    end
+    @cards.each do |card|
+      next unless card[0] == 'A'
+        score += 1
+        score += 10 if score + 10 <= 21
+    end
+    score
+  end
+
   private
 
   NAME_REGEXP = /^[A-Z]{1}[a-z]+$/
