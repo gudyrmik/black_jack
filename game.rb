@@ -4,7 +4,7 @@ class Game
   attr_accessor :card_deck
 
   def initialize
-    @card_deck = {}
+    @card_deck = []
   end
 
   def start_new_game
@@ -15,18 +15,13 @@ class Game
     card_costs = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
     card_suites.each do |suite|
       card_costs.each do |cost|
-        key = "#{cost}#{suite}"
-        points = cost.to_i
-        if points.zero?
-          @card_deck[key] = 10
-        else
-          @card_deck[key] = points
-        end
+        card_deck << "#{cost}#{suite}"
       end
     end      
   end
 
   def take_random_card
-
+    card_index = rand(card_deck.size)
+    @card_deck.delete_at(card_index)
   end
 end
