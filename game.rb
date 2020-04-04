@@ -11,11 +11,23 @@ class Game
     print 'Enter your name: '
     @user_name = gets.chomp
     @game_bank = 0
+    @user = UserPlayer.new(@user_name)
+    @dealer = DealerPlayer.new
+
+    loop do
+      puts '[1] To play new game'
+      puts '[2] To exit'
+
+      case gets.chomp.to_i
+      when 1
+        run_new_game
+      when 2
+        break
+      end
+    end
   end
 
   def run_new_game
-    @user = UserPlayer.new(@user_name)
-    @dealer = DealerPlayer.new
     init_card_deck
     deal_cards(@user)
     deal_cards(@dealer)
@@ -23,9 +35,13 @@ class Game
     make_bet(@dealer)
 
     loop do
-      user_decision = users_turn
-      break if user_decision == 3
+      puts "Game bank: #{@game_bank}"
+      users_decision = users_turn
+      break if users_decision == 3
+      dealers_decision = dealers_turn
+      break if @user.cards.size == 3 && @dealer.cards.size == 3
     end
+    summarize_game
   end
 
   private
@@ -37,10 +53,11 @@ class Game
       card_costs.each do |cost|
         @card_deck << "#{cost}#{suite}"
       end
-    end      
+    end
   end
 
   def deal_cards(player)
+    player.cards = []
     player.cards << take_random_card
     player.cards << take_random_card
   end
@@ -51,13 +68,13 @@ class Game
   end
 
   def users_turn
-    puts "Your score: #{@user.score}, cards: #{@user.cards}"
+    puts "#{@user.to_s}"
     puts '[1] Skip turn'
     puts '[2] Add card'
     puts '[3] Open cards'
+    input = gets.chomp.to_i
 
-    user_decision = gets.chomp.to_i
-    case user_decision
+    case input
     when 1
     when 2
       if @user.cards.size < 3
@@ -67,12 +84,29 @@ class Game
       end
     when 3
     end
-    user_decision
+    input
+  end
+
+  def summarize_game
+    puts @user.to_s
+    puts @dealer.to_s
+    if (@user.score <= 21 && @user.score > @dealer.score) || (@user.score <= 21 && @dealer.score > 21)
+      puts 'You win!'
+      @user.bank += @game_bank
+    else
+      puts 'You lose'
+      @dealer.bank += @game_bank
+    end
+    @game_bank = 0
   end
 
   def dealers_turn
     dealers_decision = 1 if @dealer.score >= 17
-    dealers_decision = 2 if @dealer.score < 17 && @dealer.cards.size < 3
+    if @dealer.score < 17 && @dealer.cards.size < 3
+      dealers_decision = 2
+      @dealer.cards << take_random_card
+    end
+    dealers_decision
   end
 
   def take_random_card

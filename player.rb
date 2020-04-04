@@ -25,6 +25,10 @@ class Player
     score
   end
 
+  def to_s
+    "#{@name}, #{score} points, #{@cards}, #{@bank} credits"
+  end
+
   private
 
   NAME_REGEXP = /^[A-Z]{1}[a-z]+$/
