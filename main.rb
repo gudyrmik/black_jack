@@ -1,4 +1,3 @@
-require_relative('player.rb')
-require_relative('game.rb')
+require_relative('cli.rb')
 
-Game.new
+CLI.new
